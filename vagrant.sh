@@ -20,6 +20,11 @@ function vcreate(){
         return
     fi
 
+    if [ ! -f `$DIRECTORY/Vagrantfile`]; then
+        echo "another vm exists in this path"
+        return
+    fi
+
     if [ ! -d "$DIRECTORY" ]; then
         echo "Directory $DIRECTORY was not found. Would you like to create it? [y/n] default y:"
         echo -e "\e[31mLeave Blank for yes other wise no\e[0m"
@@ -57,16 +62,20 @@ function vcreate(){
 
     echo Setting VM Name
 
-#     sed -e "/config.vm.box =/a\\
-#    config.vm.define : urname" < text.txt
+
     wait
 
     vim -c "16 s/^/  config.vm.define :$VMNAME do |t| end/" -c "wq" $DIRECTORY/Vagrantfile
 
     echo Done! 
-    echo Turning on $VMNAME
+    echo "Turning on $VMNAME to set name"
 
-    # echo creating vm named: $VMNAME
+    (cd $DIRECTORY; vagrant up)
+    wait # wait for the previous command to finish, can take a min
+    
+    if [ $? -eq 0 ]; then
+        echo "$VMNAME is up and running 🥳"
+    fi
 }
 
 
@@ -80,5 +89,47 @@ function vmup(){
         (exit 1)
         return
     fi
+}
+
+function vmd(){
+    if [ "$#" -ne 1 ]; then
+        echo "You must enter exactly 1 command line arguments"
+        (exit 1)
+        return
+    fi
+
+    VMNAME=$1    
+    VAGRANTGS=$(vagrant global-status)
+    # VAGRANTGREP=$( vagrant global-status | grep $VMNAME | awk '{print $1; exit}')
+    VAGRANTGREP=$(vagrant global-status | grep $VMNAME | awk -v vmname="$VMNAME" '$2 vmname {print $1; exit}')
+
+    echo "Removing the first instance of $VMNAME"
+    echo -e "\e[31mLeave Blank for yes otherwise press for no\e[0m"
+    echo $VAGRANTGREP
+    # read ANS
+
+    if [ -z "$ANS" ]; then
+        vagrant destroy $VAGRANTGREP
+    else
+        echo -e "\e[31mCancelled...\e[0m"
+        (exit 1)
+        return
+    fi
+
+    echo "Remove directory?"
+    echo -e "\e[31mLeave Blank for yes otherwise press for no\e[0m"
+
+    read ANS
+    if [ -z "$ANS" ]; then
+        rm -rf $($VAGRANTGREP | grep $VMNAME | awk -v vmname="$VMNAME" '$2 vmname {print $NF; exit}')
+    else
+        echo -e "\e[31mCancelled...\e[0m"
+        (exit 1)
+        return
+    fi
+}
+
+function vmshow(){
+    vagrant global-status 
 }
 
