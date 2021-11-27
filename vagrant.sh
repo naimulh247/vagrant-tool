@@ -97,7 +97,7 @@ function vmup(){
     (cd $VAGRANTGREP; vagrant up)
     wait #wait for the vm to be up and running
 
-    if [ "$#" -ne 0 ]; then
+    if [ "$?" -ne 0 ]; then
         echo $VMNAME is running ✅
     else
         echo Something might have gone wrong ❌❌❌
@@ -121,7 +121,7 @@ function vmh(){
     (cd $VAGRANTGREP; vagrant halt)
     wait #wait for the vm to be up and running
 
-    if [ "$#" -ne 0 ]; then
+    if [ "$?" -eq 0 ]; then
         echo $VMNAME has been stopped 🛑🙊
     else
         echo Something might have gone wrong ❌❌❌
@@ -192,7 +192,7 @@ function vmssh(){
     (cd $VAGRANTGREP; vagrant ssh)
     # wait #wait for the vm to be up and running
 
-    if [ "$?" -ne 0 ]; then
+    if [ "$?" -eq 0 ]; then
         echo ssh-ing into $VMNAME 💻👾
     else
         echo Something might have gone wrong ❌❌❌
