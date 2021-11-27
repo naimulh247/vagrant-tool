@@ -116,6 +116,11 @@ function vmd(){
         return
     fi
 
+    if [ ! $? -eq 0 ]; then 
+        echo Something went wrong... 😞
+        return
+    fi
+
     echo "Remove directory?"
     echo -e "\e[31mLeave Blank for yes otherwise press for no\e[0m"
 
