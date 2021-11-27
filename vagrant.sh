@@ -29,7 +29,7 @@ function vmcreate(){
 
     if [ ! -d "$DIRECTORY" ]; then
         echo "Directory $DIRECTORY was not found. Would you like to create it? [y/n] default y:"
-        echo -e "\e[31mLeave Blank for yes other wise no\e[0m"
+        echo -e "\e[31mLeave blank for yes other wise no\e[0m"
 
         read ANS
         if [ -z "$ANS" ]; then
@@ -141,7 +141,7 @@ function vmd(){
     VAGRANTGREP=$(vagrant global-status | grep $VMNAME | awk -v vmname="$VMNAME" '$2 vmname {print $1; exit}')
 
     echo "Removing the first instance of $VMNAME"
-    echo -e "\e[31mLeave Blank for yes otherwise press for no\e[0m"
+    echo -e "\e[31mLeave blank for yes otherwise press for no\e[0m"
     echo $VAGRANTGREP
     # read ANS
 
@@ -159,7 +159,7 @@ function vmd(){
     fi
 
     echo "Remove directory?"
-    echo -e "\e[31mLeave Blank for yes otherwise press for no\e[0m"
+    echo -e "\e[31mLeave blank for yes otherwise press for no\e[0m"
 
     read ANS
     if [ -z "$ANS" ]; then
@@ -189,11 +189,12 @@ function vmssh(){
     VAGRANTGREP=$(vagrant global-status | grep $VMNAME | awk -v vmname="$VMNAME" '$2 vmname {print $5; exit}')
     
     echo Waiting... ⏱
-    (cd $VAGRANTGREP; vagrant ssh)
+    cd $VAGRANTGREP; vagrant up; vagrant ssh
     # wait #wait for the vm to be up and running
-
+    
     if [ "$?" -eq 0 ]; then
-        echo ssh-ing into $VMNAME 💻👾
+        echo ssh succesfull into $VMNAME 💻👾
+        cd -
     else
         echo Something might have gone wrong ❌❌❌
     fi
