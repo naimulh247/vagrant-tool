@@ -4,7 +4,7 @@
     
 # }
 
-function vcreate(){
+function vmcreate(){
     VMNAME=$1
     VMFOLDER=$2
     VMSUBFOLDER=$3
@@ -84,10 +84,24 @@ function vcreate(){
 function vmup(){
     if [ "$#" -ne 1 ]; then
         echo "You must enter exactly 1 command line arguments"
-        echo "vmup [vm name] [vm folder] [vm subfolder] [vagrant init command]"
-        echo "Example: vcreate ubuntu20 Ubuntu 20.04 bento/ubuntu-20.04"
+        echo "vmup [vm name]"
+        echo "Example: vmup ubuntu20 "
         (exit 1)
         return
+    fi
+
+    VMNAME=$1
+    echo Getting the first instance of $VMNAME... ⏳⌛️
+    VAGRANTGREP=$(vagrant global-status | grep $VMNAME | awk -v vmname="$VMNAME" '$2 vmname {print $5; exit}')
+    
+    echo Starting... 👟💨
+    (cd $VAGRANTGREP; vagrant up)
+    wait #wait for the vm to be up and running
+
+    if [ "$#" -ne 0 ]; then
+        echo $VMNAME is running ✅
+    else
+        echo Something might have gone wrong ❌❌❌
     fi
 }
 
