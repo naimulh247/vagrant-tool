@@ -1,8 +1,10 @@
 #!/usr/bin/bash
+# Author: Naimul Hasan
 
-# function vrun(){
-    
-# }
+# Description:
+#     A simple script/ program to help dealing with vagrant
+#     its a pain to be constantly cd-ing into places and starting and stoping 
+#     so i created this out of boredom and fustration
 
 function vmcreate(){
     VMNAME=$1
@@ -78,9 +80,6 @@ function vmcreate(){
     fi
 }
 
-
-
-
 function vmup(){
     if [ "$#" -ne 1 ]; then
         echo "You must enter exactly 1 command line arguments"
@@ -128,7 +127,6 @@ function vmh(){
         echo Something might have gone wrong ❌❌❌
     fi
 }
-
 
 function vmd(){
     if [ "$#" -ne 1 ]; then
