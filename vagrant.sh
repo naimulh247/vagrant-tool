@@ -33,17 +33,25 @@ function vcreate(){
         fi
         
         echo Initializing $VagrantBOX
-        (cd DIRECTORY;vagrant init $VagrantBOX)
+
+        (cd $DIRECTORY; vagrant init $VagrantBOX)
+        wait
 
         if [ -f `$Directory/Vagrantfile`]; then
-            # echo -e "\e[42mVagrantfile created\e[0m"
+            echo -e "\e[42mVagrantfile created\e[0m"
+        else
+            echo -e "\e[31mSomething might be wrong....\e[0m"
         fi
+    
     else
-        echo Initializing $VagrantBOX
+        echo Initializing $VMNAME
         (cd $DIRECTORY; vagrant init $VagrantBOX)
-        
+        wait
+
         if [ -f `$Directory/Vagrantfile`]; then
             echo -e "\e[42mVagrantfile created\e[0m"
+        else
+            echo -e "\e[31mSomething might be wrong....\e[0m"
         fi
     fi
 
@@ -51,6 +59,7 @@ function vcreate(){
 
 #     sed -e "/config.vm.box =/a\\
 #    config.vm.define : urname" < text.txt
+    wait
 
     vim -c "16 s/^/  config.vm.define :$VMNAME do |t| end/" -c "wq" $DIRECTORY/Vagrantfile
 
@@ -59,6 +68,9 @@ function vcreate(){
 
     # echo creating vm named: $VMNAME
 }
+
+
+
 
 function vmup(){
     if [ "$#" -ne 1 ]; then
