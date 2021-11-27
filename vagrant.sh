@@ -105,6 +105,31 @@ function vmup(){
     fi
 }
 
+function vmh(){
+    if [ "$#" -ne 1 ]; then
+        echo "You must enter exactly 1 command line arguments"
+        echo "vmup [vm name]"
+        echo "Example: vmh ubuntu20 "
+        (exit 1)
+        return
+    fi
+
+    VMNAME=$1
+    echo Getting the first instance of $VMNAME... ⏳⌛️
+    VAGRANTGREP=$(vagrant global-status | grep $VMNAME | awk -v vmname="$VMNAME" '$2 vmname {print $5; exit}')
+    
+    echo Stoping... 🙊
+    (cd $VAGRANTGREP; vagrant halt)
+    wait #wait for the vm to be up and running
+
+    if [ "$#" -ne 0 ]; then
+        echo $VMNAME has been stopped 🛑🙊
+    else
+        echo Something might have gone wrong ❌❌❌
+    fi
+}
+
+
 function vmd(){
     if [ "$#" -ne 1 ]; then
         echo "You must enter exactly 1 command line arguments"
